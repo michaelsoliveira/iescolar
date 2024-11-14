@@ -1,5 +1,7 @@
 package formulario;
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
 import dao.AlunoDao;
@@ -18,7 +20,24 @@ public class FormCadastroAluno extends JFrame{
     private JTextField txtMatricula;
     private JComboBox<String> comboTurmas;
     private JButton btnCadastrar;
+    private JButton btnEditar;
     private DefaultTableModel modelo = new DefaultTableModel();
+    AlunoDao alunoDao = new AlunoDao();
+
+    private void carregarTabela() {
+        try {
+            modelo.setRowCount(0);
+            for (Aluno aluno : alunoDao.listarTodos()) {
+                modelo.addRow(new Object[]{ 
+                    aluno.getMatricula(),
+                    aluno.getNome()
+                });
+            }
+            tblAluno.setModel(modelo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public FormCadastroAluno(List<Turma> turmas) {
         setTitle("Cadastro de Aluno");
@@ -34,26 +53,7 @@ public class FormCadastroAluno extends JFrame{
         modelo.addColumn("Nome");
         tblAluno.getColumnModel().getColumn(0).setPreferredWidth(40);
         tblAluno.getColumnModel().getColumn(1).setPreferredWidth(120);
-        
-        AlunoDao alunoDao = new AlunoDao();
-        int tamanho = alunoDao.listarTodos().size();
-        String[] colunas = { "Matricula", "Nome" };
-        String[][] dados = new String[tamanho][2];
-        
-        for (int i = 0; i < tamanho; i++) {
-            Aluno aluno = alunoDao.listarTodos().get(i);
-            dados[i][0] = aluno.getMatricula();
-            dados[i][1] = aluno.getNome();
-        }
-        modelo = new DefaultTableModel(dados, colunas);
-        tblAluno.setModel(modelo);
-
-        for (Aluno aluno : alunoDao.listarTodos()) {
-            modelo.addRow(new Object[]{ 
-                aluno.getMatricula(),
-                aluno.getNome()
-             });
-        }
+        carregarTabela();
         barraRolagem = new JScrollPane(tblAluno);
         painelFundo.add(BorderLayout.CENTER, barraRolagem);
 
@@ -63,7 +63,7 @@ public class FormCadastroAluno extends JFrame{
         lblMatricula.setSize(200, 100);
         txtMatricula = new JTextField(25);
         btnCadastrar = new JButton("Cadastrar");
-
+        btnEditar = new JButton("Editar");
         JLabel lblTurma = new JLabel("Turma:");
         comboTurmas = new JComboBox<>();
         comboTurmas.setSize(200, 50);
@@ -71,13 +71,41 @@ public class FormCadastroAluno extends JFrame{
             comboTurmas.addItem(turma.getNome());
         }
 
+        modelo.addTableModelListener(new TableModelListener() {
+
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                int linhaSelecionada = tblAluno.getSelectedRow();
+                System.out.println(linhaSelecionada);
+            }
+            
+        });
+
+        btnEditar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                String matricula = txtMatricula.getText();
+                String nome = txtNome.getText();
+                // String turma = (String) comboTurmas.getSelectedItem();
+                Aluno aluno = new Aluno(matricula, nome);
+                alunoDao.update(matricula, aluno);
+                carregarTabela();
+                JOptionPane.showMessageDialog(null, "O Aluno " + 
+                aluno.getNome() + " foi cadastrado com sucesso!");
+            }
+            
+        });
+
         btnCadastrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String matricula = txtMatricula.getText();
                 String nome = txtNome.getText();
-                String turma = (String) comboTurmas.getSelectedItem();
+                // String turma = (String) comboTurmas.getSelectedItem();
                 Aluno aluno = new Aluno(matricula, nome);
-                
+                alunoDao.inserir(aluno);
+                carregarTabela();
                 JOptionPane.showMessageDialog(null, "O Aluno " + 
                 aluno.getNome() + " foi cadastrado com sucesso!");
             }
@@ -90,6 +118,7 @@ public class FormCadastroAluno extends JFrame{
         add(lblTurma);
         add(comboTurmas);
         add(btnCadastrar);
+        add(btnEditar);
         add(painelFundo);
     }
 
