@@ -1,20 +1,40 @@
 package modelo;
 
 public class Aluno {
+    private int id;
     private String matricula;
-    private String nome;
+    private Pessoa pessoa;
 
-    public Aluno(String matricula, String nome) {
+    public Aluno(int id, String matricula, Pessoa pessoa) {
+        this.id = id;
         this.matricula = matricula;
-        this.nome = nome;
+        this.pessoa = pessoa;
+    }
+
+    public void setPessoa(Pessoa pessoa) {
+        this.pessoa = pessoa;
+    }
+
+    public Pessoa getPessoa() {
+        return this.pessoa;
+    }
+
+    public Aluno() {}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setMatricula(String matricula) {
+        this.matricula = matricula;
     }
 
     public String getMatricula() {
         return this.matricula;
-    }
-
-    public String getNome() {
-        return this.nome;
     }
 
 }
