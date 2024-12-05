@@ -1,25 +1,35 @@
 package modelo;
 
 public class Nota {
+    private int id;
     private Aluno aluno;
-    private Avaliacao avaliacao;
-    private double valor;
+    private Disciplina disciplina;
+    private float valorNota;
 
-    public Nota(Aluno aluno, Avaliacao avaliacao, double valor){
+    public Nota(int id, Aluno aluno, Disciplina disciplina, float valorNota) {
+        this.id = id;
         this.aluno = aluno;
-        this.avaliacao = avaliacao;
-        this.valor = valor;
+        this.disciplina = disciplina;
+        this.valorNota = valorNota;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Aluno getAluno() {
-        return this.aluno;
+        return aluno;
     }
 
-    public Avaliacao getAvaliacao() {
-        return this.avaliacao;
+    public Disciplina getDisciplina() {
+        return disciplina;
     }
 
-    public double getValor() {
-        return this.valor;
+    public float getValorNota() {
+        return valorNota;
+    }
+
+    public void setValorNota(float valorNota) {
+        this.valorNota = valorNota;
     }
 }

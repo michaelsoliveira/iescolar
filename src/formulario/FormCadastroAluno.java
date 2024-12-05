@@ -1,18 +1,18 @@
 package formulario;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-
 import dao.AlunoDao;
 import modelo.Aluno;
+import modelo.Pessoa;
 import modelo.Turma;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;;
+import java.util.List;
 
-public class FormCadastroAluno extends JFrame{
+public class FormCadastroAluno extends JFrame {
     JTable tblAluno;
     JPanel painelFundo;
     JScrollPane barraRolagem;
@@ -30,7 +30,7 @@ public class FormCadastroAluno extends JFrame{
             for (Aluno aluno : alunoDao.listarTodos()) {
                 modelo.addRow(new Object[]{ 
                     aluno.getMatricula(),
-                    aluno.getNome()
+                    aluno.getPessoa().getNome(),
                 });
             }
             tblAluno.setModel(modelo);
@@ -49,6 +49,7 @@ public class FormCadastroAluno extends JFrame{
         painelFundo.setSize(450, 100);
         painelFundo.setLayout(new BorderLayout());
         tblAluno = new JTable(modelo);
+        modelo.addColumn("ID");
         modelo.addColumn("Matricula");
         modelo.addColumn("Nome");
         tblAluno.getColumnModel().getColumn(0).setPreferredWidth(40);
@@ -67,47 +68,38 @@ public class FormCadastroAluno extends JFrame{
         JLabel lblTurma = new JLabel("Turma:");
         comboTurmas = new JComboBox<>();
         comboTurmas.setSize(200, 50);
-        for(Turma turma : turmas) {
+        for (Turma turma : turmas) {
             comboTurmas.addItem(turma.getNome());
         }
 
         modelo.addTableModelListener(new TableModelListener() {
-
             @Override
             public void tableChanged(TableModelEvent e) {
                 int linhaSelecionada = tblAluno.getSelectedRow();
                 System.out.println(linhaSelecionada);
             }
-            
         });
 
         btnEditar.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
-                
                 String matricula = txtMatricula.getText();
                 String nome = txtNome.getText();
-                // String turma = (String) comboTurmas.getSelectedItem();
-                Aluno aluno = new Aluno(matricula, nome);
+                Aluno aluno = new Aluno(0, matricula, new Pessoa(0, nome, "", "", "", "", "", "", ""));
                 alunoDao.update(matricula, aluno);
                 carregarTabela();
-                JOptionPane.showMessageDialog(null, "O Aluno " + 
-                aluno.getNome() + " foi cadastrado com sucesso!");
+                JOptionPane.showMessageDialog(null, "O Aluno " + aluno.getPessoa().getNome() + " foi cadastrado com sucesso!");
             }
-            
         });
 
         btnCadastrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String matricula = txtMatricula.getText();
                 String nome = txtNome.getText();
-                // String turma = (String) comboTurmas.getSelectedItem();
-                Aluno aluno = new Aluno(matricula, nome);
+                Aluno aluno = new Aluno(0, matricula, new Pessoa(0, nome, "", "", "", "", "", "", ""));
                 alunoDao.inserir(aluno);
                 carregarTabela();
-                JOptionPane.showMessageDialog(null, "O Aluno " + 
-                aluno.getNome() + " foi cadastrado com sucesso!");
+                JOptionPane.showMessageDialog(null, "O Aluno " + aluno.getPessoa().getNome() + " foi cadastrado com sucesso!");
             }
         });
 

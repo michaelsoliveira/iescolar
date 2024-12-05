@@ -31,10 +31,10 @@ public class ConexaoJDBC {
 
     public static Connection getConnection() {
         try {
-           if (minhaConexao == null || minhaConexao.isClosed()) {
+            if (minhaConexao == null || minhaConexao.isClosed()) {
                 abrirConexao();
-           } 
-           return minhaConexao;
+            } 
+            return minhaConexao;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
