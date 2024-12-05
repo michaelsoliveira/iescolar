@@ -42,7 +42,7 @@ public class FormCadastroDisciplina extends JFrame{
                 String nomeDisciplina = txtNomeDisciplina.getText();
                 String nomeProfessor = (String) comboProfessores.getSelectedItem();
                 Professor professor = new Professor(nomeProfessor);
-                Disciplina disciplina = new Disciplina(nomeDisciplina, professor);
+                Disciplina disciplina = new Disciplina(1, "aaa");
                 JOptionPane.showMessageDialog(null, "A Disciplina " + 
                 disciplina.getNome() + " vinculada ao professor "+ professor.getNome() + 
                 " foi cadastrada com sucesso!");

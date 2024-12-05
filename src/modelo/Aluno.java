@@ -4,6 +4,15 @@ public class Aluno {
     private int id;
     private String matricula;
     private Pessoa pessoa;
+    private double nota;
+
+    public double getNota() {
+        return nota;
+    }
+
+    public void setNota(double nota) {
+        this.nota = nota;
+    }
 
     public Aluno(int id, String matricula, Pessoa pessoa) {
         this.id = id;
@@ -36,5 +45,4 @@ public class Aluno {
     public String getMatricula() {
         return this.matricula;
     }
-
 }
